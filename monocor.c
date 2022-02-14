@@ -1,109 +1,16 @@
-#include <stdio.h>
-#include <stdbool.h>
-#include <stdlib.h>
-#include <time.h>
+// Parte III - Registro de maiores pontuações
+// A pontuação no jogo é o número de rodadas necessárias para preencher o tabuleiro todo da mesma cor. O jogo deve guardar em um arquivo as 3 melhores pontuações já obtidas em cada configuração (tamanho do tabuleiro, número de cores), junto com as iniciais do jogador. O formato desse arquivo é de um registro de pontuação por linha, contendo 3 inteiros e uma sequência de letras em cada linha, separados por espaço. Os 3 inteiros são o tamanho do tabuleiro, o número de cores, o número de jogadas até o final do jogo; a sequência de letras são as iniciais do jogador (5 letras no máximo). O arquivo não deve conter mais de 3 (mas pode conter menos, inclusive 0) linhas com a mesma configuração (mesmo tamanho de tabuleiro e número de cores). O arquivo pode conter mais de uma linha com resultados empatados. Abaixo exemplo de conteúdo do arquivo de recordes:
 
-typedef struct {
-     int tam;          // tamanho do tabuleiro (um quadrado com "tam" casas de lado) (entre 3 e 20)
-     int ncor;         // numero de cores usadas (valores entre 1 e "ncor") (entre 3 e 9)
-     char mat[22][22]; // matriz com o estado atual do tabuleiro
-   } tabuleiro;
+//   5 4 6 JBJ
+//   7 5 19 asm
+//   7 5 12 asm
+// Quando uma partida é terminada, o programa deve mostrar os registros de recorde existentes no arquivo para a mesma configuração, em ordem de pontuação, juntamente com a pontuação obtida. Se houverem 3 registros gravados para a configuração e a pontuação obtida for pior ou igual ao pior desses 3 registros, o programa informa ao usuário e pergunta se quer jogar uma nova partida. Caso contrário, antes de fazer isso o programa pergunta as iniciais ao jogador e atualiza o arquivo de recordes.
 
-//funções disponibilizadas no github
-void muda_cor(int rl, int gl, int bl, int rf, int gf, int bf)
-{
-  printf("%c[38;2;%d;%d;%d;48;2;%d;%d;%dm", 27, rl, gl, bl, rf, gf, bf);
-}
+// Como ler o arquivo de recordes
+// Faça uma função que recebe como argumento a configuração a ler (tamanho do tabuleiro e número de cores), lê o arquivo, ignora as linhas que contiverem configurações diferentes, e retorna o número de linhas encontradas, além da pontuação e iniciais de cada uma delas.
 
-void cor_normal(void)
-{
-  printf("%c[0m", 27);
-}
+// Como atualizar o arquivo de recordes
+// Faça uma função que recebe a configuração, o número de linhas a gravar para essa configuração e a pontuação e iniciais de cada uma delas. A função então abre 2 arquivos: o de recordes, para leitura e um arquivo temporário, para gravação. Ela lê cada linha do arquivo de recordes, e se for de configuração diferente, grava a mesma linha no arquivo de saída; se for de configuração igual, ignora a linha. Quando chegar no final do arquivo de recordes, a função grava no arquivo temporário as pontuações recebidas. Fecha os dois arquivos e renomeia o arquivo temporário para ter o nome do arquivo de recordes. Essa operação irá substituir o arquivo de recordes pelo temporário. Para renomear o arquivo, use a função rename (está no stdio.h):
 
-//função explicada em aula que
-bool ta_fora(tabuleiro *tab, int lin, int col)
-{
-  if (lin < 1 || col < 1) return true;
-  if (lin > tab->tam || col > tab->tam) return true;
-  return false;
-}
-
-int numero_aleatorio_entre(int inf, int sup)
-{
-  return inf + rand()%(sup-inf+1);
-}
-
-bool tab_inic(tabuleiro *tab, int tam, int ncor) {
-  //criei uma condição que verifica se tam e ncor estão de acordo com as restrições.
-  if (tam < 3 || tam > 20) return false;  
-  if (ncor < 3 || ncor > 9) return false;  
-  // Inicializa o tabuleiro apontado por "tab", para ter o tamanho e o número de cores fornecidas.
-  tab->tam = tam;
-  tab->ncor = ncor;
-      for (int l=0; l<22; l++) {
-        for (int c=0; c<22; c++) {
-            if (ta_fora(tab, l, c)) {
-              tab->mat[l][c] = 0;
-            } else {
-              tab->mat[l][c] = numero_aleatorio_entre(1, ncor);
-            }
-        }
-      }
-      return true;
-  }
-  
-void tab_desenha(tabuleiro *tab)
-{
-  //for que percorre o tabuleiro por linha e coluna
-  for (int l=1; l<=tab->tam; l++) {
-    for (int c=1; c<=tab->tam; c++) {
-      if (tab->mat[l][c] == 1) {
-        muda_cor(255, 255, 255, 243, 119, 53);
-      } 
-      else if (tab->mat[l][c] == 2) {
-        muda_cor(255, 255,255, 255, 196, 37);
-      } 
-      else if (tab->mat[l][c] == 3) {
-        muda_cor(255, 255, 255, 209,17,65);
-      } 
-      else if (tab->mat[l][c] == 4) {
-        muda_cor(255, 255, 255, 162,82,241);
-      } 
-      else if (tab->mat[l][c] == 5) {
-        muda_cor(255, 255, 255, 255,102,204);
-      } 
-      else if (tab->mat[l][c] == 6) {
-        muda_cor(255, 255, 255, 149,210,104);
-      } 
-      else if (tab->mat[l][c] == 7) {
-        muda_cor(255, 255, 255, 88, 99, 246);
-      } 
-      else if (tab->mat[l][c] == 8) {
-        muda_cor(255, 255, 255, 5, 68, 189);
-      } 
-      else {
-        muda_cor(255, 255, 255, 0,174,219);
-      }
-      //printa o espaço que foi solicitado na descrição da quarta linha das instruções da função tab_desenha
-      printf(" %d ", tab->mat[l][c]);
-    }
-    cor_normal();
-    printf("\n"); 
-  }
-}
-
-//velhacor = cor na posição lin,col
-  //se novacor == velhacor, tá feito
-  //inicializa um vetor de posições com a posição x,y
-  //enquanto o vetor contiver alguma posição
-    //retira uma posição do vetor e coloca em x,y
-    //muda a cor da posição x,y para ser novacor
-    //para cada uma das 4 posições vizinhas a x,y
-    //se essa posição contiver velhacor, coloca essa posição no vetor
-
-
-typedef struct {
-  int npos; // número de posições ocupadas no vetor
-  int ncap; // número de posições que cabem no vetor (quanto foi alocado)
-  int *vet; // local onde colocar os valores salvos no vetor
-  } vetor;
+//    rename("nome_velho", "nome_novo");
+// A função rename retorna um inteiro, com o valor 0 se deu certo e -1 se houve algum problema; você pode usar essa informação para dar uma mensagem de desalento ao usuário.
