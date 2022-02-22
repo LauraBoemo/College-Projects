@@ -49,9 +49,9 @@ int main() {
     FILE *entrada;
     FILE *saida;
     entrada = fopen("palavras.txt", "r");
-    // saida = fopen("copia-das-palavras", "w");
-    // || saida == NUL
-    if (entrada == NULL) {
+    saida = fopen("copia-das-palavras", "w");
+
+    if (entrada == NULL || saida == NUL) {
         printf("Erro no acesso aos arquivos.\n");
         exit(1);
     }
@@ -66,6 +66,6 @@ int main() {
     }
 
     fclose(entrada);
-    // fclose(saida);
+    fclose(saida);
     return 0;
 }
