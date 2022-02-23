@@ -1,0 +1,248 @@
+/*=============================================================================*
+* includes                                                                     *
+*=============================================================================*/
+ 
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+#include <string.h>
+ 
+/*=============================================================================*
+* define                                                                       *
+*=============================================================================*/
+ 
+#define PATH_LEN 25
+#define BUFF_LEN 255
+ 
+/*=============================================================================*
+* typedef                                                                      *
+*=============================================================================*/
+ 
+typedef struct  {
+       int iNum;
+       struct lista *pLista;
+} lista;
+ 
+ lista Lista;
+ 
+/*=============================================================================*
+* declaracoes                                                                  *
+*==============================================================================*
+/*-----------------------------------------------------------------------------*
+* declaracoes - prototipos de funcoes                                          *
+*-----------------------------------------------------------------------------*/
+ 
+FILE* abreArquivo(char *);
+Lista* insereLista(Lista *, int);
+void exibeLista(Lista *);
+ 
+/*-----------------------------------------------------------------------------*
+* funcao "main"                                                                *
+*-----------------------------------------------------------------------------*/
+ 
+int main(int argc, char *argv[]) {
+     
+    FILE *pArq = NULL;
+    Lista *pLista = NULL;
+    char *pPath = NULL;
+    char *buff = NULL;
+     
+    buff = (char *) malloc(BUFF_LEN * sizeof(char));
+    pPath = (char *) malloc(PATH_LEN * sizeof(char));
+     
+    printf("Digite o caminho do arquivo: ");
+    scanf("%s", pPath);
+     
+    pArq = abreArquivo(pPath);
+    if (pArq) {
+       do {
+          fgets(buff, BUFF_LEN, pArq);
+          pLista = insereLista(pLista, atoi(buff));
+          } 
+       while (!feof(pArq));
+       printf("\n*** Lista ***\n\n");
+       exibeLista(pLista);
+    }
+    else {
+    printf("\nError");
+    }
+    system("pause");
+    return 0;
+}
+ 
+/*-----------------------------------------------------------------------------*
+* corpo das funções - abreArquivo                                              *
+*-----------------------------------------------------------------------------*/
+ 
+FILE* abreArquivo(char *pPath) {
+      FILE* pArq = NULL;
+      pArq = fopen(pPath, "r");
+      if (pArq)
+         return pArq;
+      else
+          return NULL;
+}
+ 
+/*-----------------------------------------------------------------------------*
+* corpo das funções - insereLista                                              *
+*-----------------------------------------------------------------------------*/
+ 
+Lista* insereLista(Lista *pLista, int iNum) {
+       Lista *pAux = NULL;
+       pAux = (Lista *) malloc(sizeof(Lista));
+       pAux->iNum = iNum;
+       pAux->pLista = pLista;
+       return pAux;
+}
+ 
+/*-----------------------------------------------------------------------------*
+* corpo das funções - exibeLista                                            *
+*-----------------------------------------------------------------------------*/
+ 
+void exibeLista(Lista *pLista) {
+     Lista *pAux = NULL;
+     pAux = pLista;
+     while (pAux != NULL) {
+           printf("\n %d", pAux->iNum);
+           pAux = pAux->pLista;
+     }
+     return;
+}
+
+
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+ 
+#define MAX_SIZE 256
+ 
+typedef struct {
+    char weekday[4];
+    int  month, day;
+    int  hour, minutes;
+    char away_team[4], home_team[4];
+    int  away_score, home_score;
+    int  specs;
+} Match;
+ 
+// Example line: Fri 2/12 6.00 AUS - USA 1-1 29534
+int read_matches(const char *filename, Match *matches) {
+    FILE *fin = fopen("matches.txt", "r");
+ 
+    int i = 0;
+    while (fscanf(fin, "%s %d/%d %d.%d %s - %s %d-%d %d", 
+             matches[i].weekday,
+            &matches[i].month,
+            &matches[i].day,
+            &matches[i].hour,
+            &matches[i].minutes,
+             matches[i].away_team,
+             matches[i].home_team,
+            &matches[i].away_score,
+            &matches[i].home_score,
+            &matches[i].specs) == 10)
+        ++i;
+ 
+    fclose(fin);
+    return i;
+}
+ 
+void print_matches(Match *matches, int size) {
+    for (int i = 0; i < size; ++i) {
+        Match *m = &matches[i];
+        printf("%s %2d/%2d %2d:%02d  %-3s - %-3s  %2d - %2d %6d\n",
+            m->weekday, m->month, m->day,
+            m->hour, m->minutes,
+            m->away_team, m->home_team,
+            m->away_score, m->home_score,
+            m->specs);
+    }
+}
+ 
+int main() {
+    Match matches[MAX_SIZE];
+    int size = read_matches("matches.txt", matches);
+    print_matches(matches, size);
+    return 0;
+}
+
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdbool.h>
+ 
+#define MAX_SIZE 15
+ 
+typedef struct {
+    char weekday[6];
+    char weekday2[6];
+    bool usada;
+} Match;
+ 
+// Example line: Fri 2/12 6.00 AUS - USA 1-1 29534
+int read_matches(const char *filename, Match *matches) {
+    FILE *fin = fopen("palavras.txt", "r");
+ 
+    int i = 0;
+    while (fscanf(fin, "%s %s", 
+             matches[i].weekday, matches[i].weekday2) == 2)
+        ++i;
+    fclose(fin);
+    return i;
+}
+ 
+void print_matches(Match *matches, int size) {
+    for (int i = 0; i < size; ++i) {
+        Match *m = &matches[i];
+        printf("%i.%s\n", i, m->weekday);
+    }
+}
+ 
+int main() {
+    Match matches[MAX_SIZE];
+    int size = read_matches("palavras.txt", matches);
+    print_matches(matches, size);
+    return 0;
+}
+
+
+
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdbool.h>
+ 
+#define NUM_PALAVRAS 15
+ 
+typedef struct {
+    char sem_acento[6];
+    char com_acento[16];
+    bool usada;
+} palavra_t;
+ 
+int read_lista_de_palavras(const char *filename, palavra_t *lista_de_palavras) {
+    FILE *fin = fopen("palavras.txt", "r");
+ 
+    int i = 0;
+    while (fscanf(fin, "%s%s", lista_de_palavras[i].sem_acento, lista_de_palavras[i].com_acento) == 2)
+    ++i;
+    fclose(fin);
+    return i;
+}
+ 
+void print_lista_de_palavras(palavra_t *lista_de_palavras, int size) {
+    for (int i = 0; i < size; ++i) {
+        palavra_t *m = &lista_de_palavras[i];
+        printf("%i.%s\n", i, m->sem_acento);
+    }
+}
+ 
+int main() {
+    palavra_t lista_de_palavras[NUM_PALAVRAS];
+    int size = read_lista_de_palavras("palavras.txt", lista_de_palavras);
+    print_lista_de_palavras(lista_de_palavras, size);
+    return 0;
+}
