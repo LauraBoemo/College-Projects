@@ -31,7 +31,7 @@
 - Na nossa versão, o jogador poderá desistir da jogada, digitando a palavra "desisto". O jogo se comporta nesse caso da mesma forma que quando o jogador erra a sexta tentativa.
     - Ok, se ele digitar qualquer coisa diferente de enter é desistencia. Aparecem as estatisticas e papum. As estatisticas vão ser uma função. Mais fácil assim. 
 
-## Sobre as palavras
+## Sobre as palavras XX
 - O professor separou o que vai nos servir de "API" para as palavras 
     - Link da API https://github.com/BenhurUFSM/l121b/blob/main/Assuntos/palavras
     - Cada linha contém 11 espaços, ou seja, duas palavras de 5 letras divididas por um espaço.
@@ -226,10 +226,10 @@ typedef struct {
 ## Funcionamento Geral do programa
 O funcionamento geral do jogo deve ser:
 
-1. o programa lê o arquivo de palavras
-2. o programa sorteia uma palavra, marca como usada, atualiza o arquivo de palavras e inicializa a estrutura da partida
-3. o programa desenha a tela principal
-4. o programa pede um chute ao jogador
+1. o programa lê o arquivo de palavras X
+2. o programa sorteia uma palavra, marca como usada, atualiza o arquivo de palavras e inicializa a estrutura da partida X
+3. o programa desenha a tela principal X
+4. o programa pede um chute ao jogador X
 5. se o chute for "desisto", continua no passo 11
 6. se o chute não for válido, informa o jogador e volta ao passo 2
 7. o programa insere o chute na estrutura da partida, analisa ele, atualiza o vetor de letras

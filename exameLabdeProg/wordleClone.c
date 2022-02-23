@@ -1322,3 +1322,871 @@ int main() {
     fclose(saida);
     return 0;
 }
+
+
+
+
+
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdbool.h>
+#include <time.h>
+ 
+#define NUM_PALAVRAS 15
+#define CINZA 169,169,169   
+#define LARANJA 244,164,96  
+#define VERDE 144,238,144   
+#define WHITE 255, 255, 255 
+
+typedef struct {
+    char sem_acento[6];
+    char com_acento[16];
+    bool usada;
+} palavra_t;
+
+
+palavra_t lista_de_palavras[NUM_PALAVRAS];
+
+void mudaCor(int rl, int gl, int bl, int rf, int gf, int bf)
+{
+    printf("%c[38;2;%d;%d;%d;48;2;%d;%d;%dm", 27, rl, gl, bl, rf, gf, bf);
+}
+
+void corNormal()
+{
+    printf("%c[0m", 27);
+}
+
+int num_rand() {
+    srand(time(NULL));
+    int aux = rand() % NUM_PALAVRAS;
+    return aux;
+}
+
+bool le_palavra(FILE *arquivo) {
+    int i = 0;
+    while (fscanf(arquivo, "%s%s", lista_de_palavras[i].sem_acento, lista_de_palavras[i].com_acento) == 2)
+    ++i;
+    return true;
+}
+ 
+bool grava_palavra(FILE *arquivo, palavra_t *p) {
+    for (int i = 0; i < NUM_PALAVRAS; ++i) {
+        palavra_t *m = &lista_de_palavras[i];
+        fprintf(arquivo,"%s %s\n", m->sem_acento, m->com_acento);
+    }
+    return true;
+}
+
+void tela_principal(char *dica[], char *palavra_chute[]) {
+    char aux_dica[5];
+    char aux_chute[5];
+    strcpy(aux_dica, *dica);
+    strcpy(aux_chute, *palavra_chute);
+    
+    for(int i = 0; i < 6; i++){
+        for(int j = 0; j < 4; j++) {
+            for(int aux = 0; aux < 5; aux++) {
+                if(j == 0 || j == 2) {
+                    switch(aux_dica[aux]) {
+                        case 'c':
+                            mudaCor(WHITE, CINZA);
+                            break;
+                        case 'l':
+                            mudaCor(WHITE, LARANJA);
+                            break;
+                        case 'v':
+                            mudaCor(WHITE, VERDE);
+                            break;
+                    }
+                    printf("   ");
+                    corNormal();
+                    printf(" ");
+                } 
+                if(j == 1) {
+                    switch(aux_dica[aux]) {
+                        case 'c':
+                            mudaCor(WHITE, CINZA);
+                            break;
+                        case 'l':
+                            mudaCor(WHITE, LARANJA);
+                            break;
+                        case 'v':
+                            mudaCor(WHITE, VERDE);
+                            break;
+                    }
+                    printf(" %c ", aux_chute[aux]);
+                    corNormal();
+                    printf(" ");
+                } 
+                if(j == 3){
+                    printf("    ");
+                }
+            }
+            printf("\n");
+        }
+    }
+}
+
+char* verificacao(char *palavra_sorteada[], char *palavra_chute[]) {
+    static char aux_retorno_dica[5];
+    char aux_sorteio[5];
+    char aux_chute[5];
+    strcpy(aux_sorteio, *palavra_sorteada);
+    strcpy(aux_chute, *palavra_chute);
+    
+    for(int i = 0; i < 5; i++) {
+        if(aux_chute[i] == aux_sorteio[i]) {
+            aux_retorno_dica[i] = 'v';
+        } else if(aux_chute[i] != aux_sorteio[i]) {
+            aux_retorno_dica[i] = 'c';
+        }
+    }
+    return aux_retorno_dica;
+}
+
+int main() {
+    FILE *entrada;
+    FILE *saida;
+    entrada = fopen("palavras.txt", "r");
+    saida = fopen("copia-das-palavras", "w");
+    char *palavra_sorteada[5];
+    char *palavra_chute[5];
+    char *dica[4];
+
+    if (entrada == NULL || saida == NULL) {
+        printf("Erro no acesso aos arquivos.\n");
+        exit(1);
+    }
+    
+    palavra_t palavra;
+    
+    while (le_palavra(entrada)) {
+        palavra_t *m = &lista_de_palavras[num_rand()];
+        *palavra_sorteada = m->sem_acento;
+        printf("Palavra sorteada: '%s'\n\n", *palavra_sorteada);
+        
+        printf("Informe uma tentativa...");
+        scanf("%s", *palavra_chute);
+        
+        verificacao(palavra_sorteada, palavra_chute);
+        *dica = verificacao(palavra_sorteada, palavra_chute);
+        
+        tela_principal(dica, palavra_chute);
+        
+        if (!grava_palavra(saida, &palavra)) {
+            printf("Problema na gravação.\n");
+            break;
+        }
+        break;
+    }
+
+    fclose(entrada);
+    fclose(saida);
+    return 0;
+}
+
+
+
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdbool.h>
+#include <time.h>
+ 
+#define NUM_PALAVRAS 15
+#define CINZA 169,169,169   
+#define LARANJA 244,164,96  
+#define VERDE 144,238,144   
+#define WHITE 255, 255, 255 
+
+typedef struct {
+    char sem_acento[6];
+    char com_acento[16];
+    bool usada;
+} palavra_t;
+
+
+palavra_t lista_de_palavras[NUM_PALAVRAS];
+
+void mudaCor(int rl, int gl, int bl, int rf, int gf, int bf)
+{
+    printf("%c[38;2;%d;%d;%d;48;2;%d;%d;%dm", 27, rl, gl, bl, rf, gf, bf);
+}
+
+void corNormal()
+{
+    printf("%c[0m", 27);
+}
+
+int num_rand() {
+    srand(time(NULL));
+    int aux = rand() % NUM_PALAVRAS;
+    return aux;
+}
+
+bool le_palavra(FILE *arquivo) {
+    int i = 0;
+    while (fscanf(arquivo, "%s%s", lista_de_palavras[i].sem_acento, lista_de_palavras[i].com_acento) == 2)
+    ++i;
+    return true;
+}
+ 
+bool grava_palavra(FILE *arquivo, palavra_t *p) {
+    for (int i = 0; i < NUM_PALAVRAS; ++i) {
+        palavra_t *m = &lista_de_palavras[i];
+        fprintf(arquivo,"%s %s\n", m->sem_acento, m->com_acento);
+    }
+    return true;
+}
+
+void tela_principal(char *dica[], char *palavra_chute[]) {
+    char aux_dica[5];
+    char aux_chute[5];
+    strcpy(aux_dica, *dica);
+    strcpy(aux_chute, *palavra_chute);
+    
+    for(int i = 0; i < 6; i++){
+        for(int j = 0; j < 4; j++) {
+            for(int aux = 0; aux < 5; aux++) {
+                if(j == 0 || j == 2) {
+                    switch(aux_dica[aux]) {
+                        case 'c':
+                            mudaCor(WHITE, CINZA);
+                            break;
+                        case 'l':
+                            mudaCor(WHITE, LARANJA);
+                            break;
+                        case 'v':
+                            mudaCor(WHITE, VERDE);
+                            break;
+                    }
+                    printf("   ");
+                    corNormal();
+                    printf(" ");
+                } 
+                if(j == 1) {
+                    switch(aux_dica[aux]) {
+                        case 'c':
+                            mudaCor(WHITE, CINZA);
+                            break;
+                        case 'l':
+                            mudaCor(WHITE, LARANJA);
+                            break;
+                        case 'v':
+                            mudaCor(WHITE, VERDE);
+                            break;
+                    }
+                    printf(" %c ", aux_chute[aux]);
+                    corNormal();
+                    printf(" ");
+                } 
+                if(j == 3){
+                    printf("    ");
+                }
+            }
+            printf("\n");
+        }
+    }
+}
+
+char* verificacao(char *palavra_sorteada[], char *palavra_chute[]) {
+    static char aux_retorno_dica[5];
+    char aux_sorteio[5];
+    char aux_chute[5];
+    strcpy(aux_sorteio, *palavra_sorteada);
+    strcpy(aux_chute, *palavra_chute);
+    
+    for(int i = 0; i < 5; i++) {
+        if(aux_chute[i] != aux_sorteio[i]) {
+            aux_retorno_dica[i] = 'c';
+        }
+        
+        for(int j = 0; j < 5; j++) {
+            if(aux_chute[i] == aux_sorteio[j]) {
+                aux_retorno_dica[i] = 'l';
+            }
+        }
+        
+        if(aux_chute[i] == aux_sorteio[i]) {
+            aux_retorno_dica[i] = 'v';
+        } 
+    }
+    
+    return aux_retorno_dica;
+}
+
+int main() {
+    FILE *entrada;
+    FILE *saida;
+    entrada = fopen("palavras.txt", "r");
+    saida = fopen("copia-das-palavras", "w");
+    char *palavra_sorteada[5];
+    char *palavra_chute[5];
+    char *dica[4];
+
+    if (entrada == NULL || saida == NULL) {
+        printf("Erro no acesso aos arquivos.\n");
+        exit(1);
+    }
+    
+    palavra_t palavra;
+    
+    while (le_palavra(entrada)) {
+        palavra_t *m = &lista_de_palavras[num_rand()];
+        *palavra_sorteada = m->sem_acento;
+        printf("Palavra sorteada: '%s'\n\n", *palavra_sorteada);
+        
+        printf("Informe uma tentativa...");
+        scanf("%s", *palavra_chute);
+        
+        verificacao(palavra_sorteada, palavra_chute);
+        *dica = verificacao(palavra_sorteada, palavra_chute);
+        
+        tela_principal(dica, palavra_chute);
+        
+        if (!grava_palavra(saida, &palavra)) {
+            printf("Problema na gravação.\n");
+            break;
+        }
+        break;
+    }
+
+    fclose(entrada);
+    fclose(saida);
+    return 0;
+}
+
+
+
+
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdbool.h>
+#include <time.h>
+ 
+#define NUM_PALAVRAS 15
+#define CINZA 169, 169, 169   
+#define LARANJA 230, 126, 34 
+#define VERDE 39, 174, 96   
+#define WHITE 255, 255, 255 
+
+typedef struct {
+    char sem_acento[6];
+    char com_acento[16];
+    bool usada;
+} palavra_t;
+
+
+palavra_t lista_de_palavras[NUM_PALAVRAS];
+
+void mudaCor(int rl, int gl, int bl, int rf, int gf, int bf)
+{
+    printf("%c[38;2;%d;%d;%d;48;2;%d;%d;%dm", 27, rl, gl, bl, rf, gf, bf);
+}
+
+void corNormal()
+{
+    printf("%c[0m", 27);
+}
+
+int num_rand() {
+    srand(time(NULL));
+    int aux = rand() % NUM_PALAVRAS;
+    return aux;
+}
+
+bool le_palavra(FILE *arquivo) {
+    int i = 0;
+    while (fscanf(arquivo, "%s%s", lista_de_palavras[i].sem_acento, lista_de_palavras[i].com_acento) == 2)
+    ++i;
+    return true;
+}
+ 
+bool grava_palavra(FILE *arquivo, palavra_t *p) {
+    for (int i = 0; i < NUM_PALAVRAS; ++i) {
+        palavra_t *m = &lista_de_palavras[i];
+        fprintf(arquivo,"%s %s\n", m->sem_acento, m->com_acento);
+    }
+    return true;
+}
+
+void tela_principal(char *dica[], char *palavra_chute[]) {
+    char aux_dica[5];
+    char aux_chute[5];
+    strcpy(aux_dica, *dica);
+    strcpy(aux_chute, *palavra_chute);
+    
+    for(int i = 0; i < 6; i++){
+        for(int j = 0; j < 4; j++) {
+            for(int aux = 0; aux < 5; aux++) {
+                if(j == 0 || j == 2) {
+                    switch(aux_dica[aux]) {
+                        case 'c':
+                            mudaCor(WHITE, CINZA);
+                            break;
+                        case 'l':
+                            mudaCor(WHITE, LARANJA);
+                            break;
+                        case 'v':
+                            mudaCor(WHITE, VERDE);
+                            break;
+                    }
+                    printf("   ");
+                    corNormal();
+                    printf(" ");
+                } 
+                if(j == 1) {
+                    switch(aux_dica[aux]) {
+                        case 'c':
+                            mudaCor(WHITE, CINZA);
+                            break;
+                        case 'l':
+                            mudaCor(WHITE, LARANJA);
+                            break;
+                        case 'v':
+                            mudaCor(WHITE, VERDE);
+                            break;
+                    }
+                    printf(" %c ", aux_chute[aux]);
+                    corNormal();
+                    printf(" ");
+                } 
+                if(j == 3){
+                    printf("    ");
+                }
+            }
+            printf("\n");
+        }
+    }
+}
+
+char* verificacao(char *palavra_sorteada[], char *palavra_chute[]) {
+    static char aux_retorno_dica[5];
+    char aux_sorteio[5];
+    char aux_chute[5];
+    strcpy(aux_sorteio, *palavra_sorteada);
+    strcpy(aux_chute, *palavra_chute);
+    
+    for(int i = 0; i < 5; i++) {
+        if(aux_chute[i] != aux_sorteio[i]) {
+            aux_retorno_dica[i] = 'c';
+        }
+        
+        for(int j = 0; j < 5; j++) {
+            if(aux_chute[i] == aux_sorteio[j]) {
+                aux_retorno_dica[i] = 'l';
+            }
+        }
+        
+        if(aux_chute[i] == aux_sorteio[i]) {
+            aux_retorno_dica[i] = 'v';
+        } 
+    }
+    
+    return aux_retorno_dica;
+}
+
+int main() {
+    FILE *entrada;
+    FILE *saida;
+    entrada = fopen("palavras.txt", "r");
+    saida = fopen("copia-das-palavras", "w");
+    char *palavra_sorteada[5];
+    char *palavra_chute[5];
+    char *dica[4];
+
+    if (entrada == NULL || saida == NULL) {
+        printf("Erro no acesso aos arquivos.\n");
+        exit(1);
+    }
+    
+    palavra_t palavra;
+    
+    while (le_palavra(entrada)) {
+        palavra_t *m = &lista_de_palavras[num_rand()];
+        *palavra_sorteada = m->sem_acento;
+        printf("Palavra sorteada: '%s'\n\n", *palavra_sorteada);
+        
+        printf("Informe uma tentativa...");
+        scanf("%s", *palavra_chute);
+        
+        verificacao(palavra_sorteada, palavra_chute);
+        *dica = verificacao(palavra_sorteada, palavra_chute);
+        
+        tela_principal(dica, palavra_chute);
+        
+        if (!grava_palavra(saida, &palavra)) {
+            printf("Problema na gravação.\n");
+            break;
+        }
+        break;
+    }
+
+    fclose(entrada);
+    fclose(saida);
+    return 0;
+}
+
+
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdbool.h>
+#include <time.h>
+ 
+#define NUM_PALAVRAS 15
+#define CINZA 169, 169, 169   
+#define LARANJA 230, 126, 34 
+#define VERDE 39, 174, 96   
+#define WHITE 255, 255, 255 
+
+typedef struct {
+    char sem_acento[6];
+    char com_acento[16];
+    bool usada;
+} palavra_t;
+
+
+palavra_t lista_de_palavras[NUM_PALAVRAS];
+
+void mudaCor(int rl, int gl, int bl, int rf, int gf, int bf)
+{
+    printf("%c[38;2;%d;%d;%d;48;2;%d;%d;%dm", 27, rl, gl, bl, rf, gf, bf);
+}
+
+void corNormal()
+{
+    printf("%c[0m", 27);
+}
+
+int num_rand() {
+    srand(time(NULL));
+    int aux = rand() % NUM_PALAVRAS;
+    return aux;
+}
+
+bool le_palavra(FILE *arquivo) {
+    int i = 0;
+    while (fscanf(arquivo, "%s%s", lista_de_palavras[i].sem_acento, lista_de_palavras[i].com_acento) == 2)
+    ++i;
+    return true;
+}
+ 
+bool grava_palavra(FILE *arquivo, palavra_t *p) {
+    for (int i = 0; i < NUM_PALAVRAS; ++i) {
+        palavra_t *m = &lista_de_palavras[i];
+        fprintf(arquivo,"%s %s\n", m->sem_acento, m->com_acento);
+    }
+    return true;
+}
+
+void tela_principal(char *dica[], char *palavra_chute[], int aux_tentativas) {
+    char aux_dica[5];
+    char aux_chute[5];
+    strcpy(aux_dica, *dica);
+    strcpy(aux_chute, *palavra_chute);
+    
+    for(int i = 0; i < aux_tentativas + 1; i++){
+        for(int j = 0; j < 4; j++) {
+            for(int aux = 0; aux < 5; aux++) {
+                if(j == 0 || j == 2) {
+                    switch(aux_dica[aux]) {
+                        case 'c':
+                            mudaCor(WHITE, CINZA);
+                            break;
+                        case 'l':
+                            mudaCor(WHITE, LARANJA);
+                            break;
+                        case 'v':
+                            mudaCor(WHITE, VERDE);
+                            break;
+                    }
+                    printf("   ");
+                    corNormal();
+                    printf(" ");
+                } 
+                if(j == 1) {
+                    switch(aux_dica[aux]) {
+                        case 'c':
+                            mudaCor(WHITE, CINZA);
+                            break;
+                        case 'l':
+                            mudaCor(WHITE, LARANJA);
+                            break;
+                        case 'v':
+                            mudaCor(WHITE, VERDE);
+                            break;
+                    }
+                    printf(" %c ", aux_chute[aux]);
+                    corNormal();
+                    printf(" ");
+                } 
+                if(j == 3){
+                    printf("    ");
+                }
+            }
+            printf("\n");
+        }
+    }
+}
+
+char* verificacao(char *palavra_sorteada[], char *palavra_chute[]) {
+    static char aux_retorno_dica[5];
+    char aux_sorteio[5];
+    char aux_chute[5];
+    strcpy(aux_sorteio, *palavra_sorteada);
+    strcpy(aux_chute, *palavra_chute);
+    
+    for(int i = 0; i < 5; i++) {
+        if(aux_chute[i] != aux_sorteio[i]) {
+            aux_retorno_dica[i] = 'c';
+        }
+        
+        for(int j = 0; j < 5; j++) {
+            if(aux_chute[i] == aux_sorteio[j]) {
+                aux_retorno_dica[i] = 'l';
+            }
+        }
+        
+        if(aux_chute[i] == aux_sorteio[i]) {
+            aux_retorno_dica[i] = 'v';
+        } 
+    }
+    
+    return aux_retorno_dica;
+}
+
+int main() {
+    FILE *entrada;
+    FILE *saida;
+    entrada = fopen("palavras.txt", "r");
+    saida = fopen("copia-das-palavras", "w");
+    char *palavra_sorteada[5];
+    char *palavra_chute[5];
+    char *dica[4];
+
+    if (entrada == NULL || saida == NULL) {
+        printf("Erro no acesso aos arquivos.\n");
+        exit(1);
+    }
+    
+    palavra_t palavra;
+    int aux_tentativas = 0;
+    
+    while (le_palavra(entrada)) {
+        palavra_t *m = &lista_de_palavras[num_rand()];
+        *palavra_sorteada = m->sem_acento;
+        printf("Palavra sorteada: '%s'\n\n", *palavra_sorteada);
+        
+        printf("Informe uma tentativa...");
+        scanf("%s", *palavra_chute);
+        
+        verificacao(palavra_sorteada, palavra_chute);
+        *dica = verificacao(palavra_sorteada, palavra_chute);
+        
+        tela_principal(dica, palavra_chute, aux_tentativas);
+        
+        aux_tentativas++;
+        if(aux_tentativas == 5) {
+            printf("opa opa oap");
+        }
+        if (!grava_palavra(saida, &palavra)) {
+            printf("Problema na gravação.\n");
+            break;
+        }
+    }
+
+    fclose(entrada);
+    fclose(saida);
+    return 0;
+}
+
+
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdbool.h>
+#include <time.h>
+ 
+#define NUM_PALAVRAS 15
+#define CINZA 169, 169, 169   
+#define LARANJA 230, 126, 34 
+#define VERDE 39, 174, 96   
+#define WHITE 255, 255, 255 
+
+typedef struct {
+    char sem_acento[6];
+    char com_acento[16];
+    bool usada;
+} palavra_t;
+
+typedef struct {
+  palavra_t sorteada;     
+  int nchutes;            
+  chute_t chutes[6];      
+  char letras_usadas[26]; 
+} partida_t;
+
+palavra_t lista_de_palavras[NUM_PALAVRAS];
+
+void mudaCor(int rl, int gl, int bl, int rf, int gf, int bf)
+{
+    printf("%c[38;2;%d;%d;%d;48;2;%d;%d;%dm", 27, rl, gl, bl, rf, gf, bf);
+}
+
+void corNormal()
+{
+    printf("%c[0m", 27);
+}
+
+int num_rand() {
+    srand(time(NULL));
+    int aux = rand() % NUM_PALAVRAS;
+    return aux;
+}
+
+bool le_palavra(FILE *arquivo) {
+    int i = 0;
+    while (fscanf(arquivo, "%s%s", lista_de_palavras[i].sem_acento, lista_de_palavras[i].com_acento) == 2)
+    ++i;
+    return true;
+}
+ 
+bool grava_palavra(FILE *arquivo, palavra_t *p) {
+    for (int i = 0; i < NUM_PALAVRAS; ++i) {
+        palavra_t *m = &lista_de_palavras[i];
+        fprintf(arquivo,"%s %s\n", m->sem_acento, m->com_acento);
+    }
+    return true;
+}
+
+        *palavra_sorteada = gerar_palavra_aleatoria();
+        *auxiliar_sorteada = gerar_palavra_auxiliar(palavra_sorteada);
+void tela_principal(char *dica[], char *palavra_chute[], int aux_tentativas) {
+    char aux_dica[5];
+    char aux_chute[5];
+    strcpy(aux_dica, *dica);
+    strcpy(aux_chute, *palavra_chute);
+    
+    for(int i = 0; i < aux_tentativas + 1; i++){
+        for(int j = 0; j < 4; j++) {
+            for(int aux = 0; aux < 5; aux++) {
+                if(j == 0 || j == 2) {
+                    switch(aux_dica[aux]) {
+                        case 'c':
+                            mudaCor(WHITE, CINZA);
+                            break;
+                        case 'l':
+                            mudaCor(WHITE, LARANJA);
+                            break;
+                        case 'v':
+                            mudaCor(WHITE, VERDE);
+                            break;
+                    }
+                    printf("   ");
+                    corNormal();
+                    printf(" ");
+                } 
+                if(j == 1) {
+                    switch(aux_dica[aux]) {
+                        case 'c':
+                            mudaCor(WHITE, CINZA);
+                            break;
+                        case 'l':
+                            mudaCor(WHITE, LARANJA);
+                            break;
+                        case 'v':
+                            mudaCor(WHITE, VERDE);
+                            break;
+                    }
+                    printf(" %c ", aux_chute[aux]);
+                    corNormal();
+                    printf(" ");
+                } 
+                if(j == 3){
+                    printf("    ");
+                }
+            }
+            printf("\n");
+        }
+    }
+}
+
+char* verificacao(char *palavra_sorteada[], char *palavra_chute[]) {
+    static char aux_retorno_dica[5];
+    char aux_sorteio[5];
+    char aux_chute[5];
+    strcpy(aux_sorteio, *palavra_sorteada);
+    strcpy(aux_chute, *palavra_chute);
+    
+    for(int i = 0; i < 5; i++) {
+        if(aux_chute[i] != aux_sorteio[i]) {
+            aux_retorno_dica[i] = 'c';
+        }
+        
+        for(int j = 0; j < 5; j++) {
+            if(aux_chute[i] == aux_sorteio[j]) {
+                aux_retorno_dica[i] = 'l';
+            }
+        }
+        
+        if(aux_chute[i] == aux_sorteio[i]) {
+            aux_retorno_dica[i] = 'v';
+        } 
+    }
+    
+    return aux_retorno_dica;
+}
+
+int main() {
+    FILE *entrada;
+    FILE *saida;
+    entrada = fopen("palavras.txt", "r");
+    saida = fopen("copia-das-palavras", "w");
+    char *palavra_sorteada[5];
+    char *palavra_chute[5];
+    char *dica[4];
+
+    if (entrada == NULL || saida == NULL) {
+        printf("Erro no acesso aos arquivos.\n");
+        exit(1);
+    }
+    
+    palavra_t palavra;
+    
+    while (le_palavra(entrada)) {
+        
+        palavra_t *m = &lista_de_palavras[num_rand()];
+        *palavra_sorteada = m->sem_acento;
+        printf("Palavra sorteada: '%s'\n\n", *palavra_sorteada);
+        
+        if (!grava_palavra(saida, &palavra)) {
+            printf("Problema na gravação.\n");
+            break;
+        }
+        
+        for(int aux_tentativas = 0; aux_tentativas < 6; aux_tentativas++) {
+            printf("Informe uma tentativa...");
+            scanf("%s", *palavra_chute);
+            
+            verificacao(palavra_sorteada, palavra_chute);
+            *dica = verificacao(palavra_sorteada, palavra_chute);
+            
+            tela_principal(dica, palavra_chute, aux_tentativas);
+        }
+        
+        break;
+    }
+
+    fclose(entrada);
+    fclose(saida);
+    return 0;
+}
