@@ -259,3 +259,23 @@ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 >>>> 2. marca como usada, atualiza o arquivo de palavras 
 >>>> 7. atualiza o vetor de letras -- Faz teclado
 >>>> ## Armazenar as palavras
+
+   typedef struct {
+     char letras[5];    // as letras que o jogador chutou
+     palavra_t palavra; // a palavra correspondente ao chute
+     char dicas[5];     // a classificação de cada letra do chute
+     bool correto;      // true se a palavra corresponde à sorteada
+   } chute_t;
+
+   typedef struct {
+    palavra_t sorteada;     // a palavra que o jogador deve adivinhar
+    int nchutes;            // quantos chutes já foram feitos
+    chute_t chutes[6];      // aqui estão os chutes
+    char letras_usadas[26]; // vetor com o estado de cada letra
+   } partida_t;
+
+      typedef struct {
+     char sem_acento[5];
+     char com_acento[10];
+     bool usada;
+   } palavra_t;
