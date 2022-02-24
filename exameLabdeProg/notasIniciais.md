@@ -144,6 +144,19 @@ consegue testar o arquivo fazendo algo tipo...
      char dicas[5];     // a classificação de cada letra do chute
      bool correto;      // true se a palavra corresponde à sorteada
    } chute_t;
+
+   typedef struct {
+    palavra_t sorteada;     // a palavra que o jogador deve adivinhar
+    int nchutes;            // quantos chutes já foram feitos
+    chute_t chutes[6];      // aqui estão os chutes
+    char letras_usadas[26]; // vetor com o estado de cada letra
+   } partida_t;
+
+      typedef struct {
+     char sem_acento[5];
+     char com_acento[10];
+     bool usada;
+   } palavra_t;
 ```
 - O campo letras tem as 5 letras usadas que compõe o chute, todas minúsculas. 
 - O campo palavra contém uma cópia da palavra corresondente ao chute na lista de palavras. 
@@ -230,12 +243,12 @@ O funcionamento geral do jogo deve ser:
 2. o programa sorteia uma palavra, marca como usada, atualiza o arquivo de palavras e inicializa a estrutura da partida X
 3. o programa desenha a tela principal X
 4. o programa pede um chute ao jogador X
-5. se o chute for "desisto", continua no passo 11
-6. se o chute não for válido, informa o jogador e volta ao passo 2
-7. o programa insere o chute na estrutura da partida, analisa ele, atualiza o vetor de letras
+5. se o chute for "desisto", continua no passo 11 x
+6. se o chute não for válido, informa o jogador e volta ao passo 2 x
+7. o programa insere o chute na estrutura da partida, analisa ele, atualiza o vetor de letras x
 8. se o chute for correto, desenha a tela, felicita o jogador, continua no passo 12
-9. se foi o último chute (sexto), desenha a tela, infelicita o jogador, continua no passo 11
-10. volta para o passo 3
+9. se foi o último chute (sexto), desenha a tela, infelicita o jogador, continua no passo 11 x
+10. volta para o passo 3 x
 11. informa a palavra sorteada ao jogador
 12. pergunta se quer jogar de novo e volta ao passo 2 se for o caso, senão vai para o passo 13
 13. termina o programa
