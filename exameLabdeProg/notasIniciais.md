@@ -30,7 +30,6 @@
     - Ok, após apresentar os dados, o programa pode ser chamado novamente.
 - Na nossa versão, o jogador poderá desistir da jogada, digitando a palavra "desisto". O jogo se comporta nesse caso da mesma forma que quando o jogador erra a sexta tentativa.
     - Ok, se ele digitar qualquer coisa diferente de enter é desistencia. Aparecem as estatisticas e papum. As estatisticas vão ser uma função. Mais fácil assim. 
-
 ## Sobre as palavras XX
 - O professor separou o que vai nos servir de "API" para as palavras 
     - Link da API https://github.com/BenhurUFSM/l121b/blob/main/Assuntos/palavras
@@ -249,10 +248,14 @@ O funcionamento geral do jogo deve ser:
 8. se o chute for correto, desenha a tela, felicita o jogador, continua no passo 12
 9. se foi o último chute (sexto), desenha a tela, infelicita o jogador, continua no passo 11 x
 10. volta para o passo 3 x
-11. informa a palavra sorteada ao jogador
-12. pergunta se quer jogar de novo e volta ao passo 2 se for o caso, senão vai para o passo 13
-13. termina o programa
+11. informa a palavra sorteada ao jogador x
+12. pergunta se quer jogar de novo e volta ao passo 2 se for o caso, senão vai para o passo 13 x
+13. termina o programa x
 Organize isso!
 
 
 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+
+>>>> 2. marca como usada, atualiza o arquivo de palavras 
+>>>> 7. atualiza o vetor de letras -- Faz teclado
+>>>> ## Armazenar as palavras
