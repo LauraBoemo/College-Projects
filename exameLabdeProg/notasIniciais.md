@@ -4,7 +4,7 @@
 - O jogo sorteia uma palavra de 5 letras;
     - Declarar de array 
 - O jogador tenta adivinhar a palavra. Ele tem até seis tentativas. 
-    - Gerar um While (contador < 7) para executar a chamada das tentativas
+    - Gerar um While (contador < 7) para executar a chamada das tentativas.
     - Declarar contador para tentativas
 - O jogador chuta uma palavra.
     - Dentro do While, popula-se uma variável de 5 caracteres que será a tentativa.
