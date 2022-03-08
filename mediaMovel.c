@@ -6,7 +6,7 @@
 #define VERDE    50, 205, 50, 0, 0, 0
 
 int verificarFile(FILE *aux) {
-    if (aux == NULL) {
+    if (aux == NULL) { 
         printf("Não foi possível abrir o arquivo\n");
         return 5;
     }
